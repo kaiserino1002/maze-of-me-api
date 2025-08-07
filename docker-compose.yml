@@ -16,6 +16,10 @@ services:
       - DB_PASSWORD=root
     depends_on:
       - db
+    networks:
+      - maze_of_me-net
+    tty: true
+    command: sh -c "php artisan serve --host=0.0.0.0 --port=8000"
 
   db:
     image: mysql:8.0
@@ -27,5 +31,48 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - dbdata:/var/lib/mysql
+    networks:
+      - maze_of_me-net
+
+  composer:
+    image: composer:latest
+    container_name: maze_of_me_composer
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: ["composer", "install"]
+    networks:
+      - maze_of_me-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: maze_of_me_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: maze_of_me
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - maze_of_me-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: maze_of_me_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+    networks:
+      - maze_of_me-net
+
+networks:
+  maze_of_me-net:
+
 volumes:
   dbdata:

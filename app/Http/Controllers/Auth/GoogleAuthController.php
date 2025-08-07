@@ -12,6 +12,7 @@ class GoogleAuthController extends Controller
 {
       public function redirectToGoogle()
     {
+        \Log::info('Redirect URI: ' . config('services.google.redirect'));
         return Socialite::driver('google')->stateless()->redirect();
     }
 
@@ -30,6 +31,12 @@ class GoogleAuthController extends Controller
         );
 
         Auth::login($user, true);
+        session(['user_id' => $user->id]);
+
+        \Log::info('Google ユーザー取得: ', [$googleUser]);
+        \Log::info('ログイン後のユーザー: ', [Auth::user()]);
+        \Log::info('セッションID: ' . session()->getId());
+
 
         // SPAトップへリダイレクト
         return redirect(env('FRONTEND_URL', 'http://localhost:8000'));
