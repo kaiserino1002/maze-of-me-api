@@ -31,12 +31,14 @@ class GoogleAuthController extends Controller
         );
 
         Auth::login($user, true);
+        // $request->session()->regenerate();
         session(['user_id' => $user->id]);
 
         \Log::info('Google ユーザー取得: ', [$googleUser]);
         \Log::info('ログイン後のユーザー: ', [Auth::user()]);
         \Log::info('セッションID: ' . session()->getId());
 
+        csrf_token();
 
         // SPAトップへリダイレクト
         return redirect(env('FRONTEND_URL', 'http://localhost:8000'));
