@@ -1,22 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\Auth\GoogleAuthController;
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
-// Route::get('/check-auth', function (\Illuminate\Http\Request $request) {
-//     \Log::info('Session ID: ' . session()->getId());
-//     \Log::info('Auth check: ' . json_encode(auth()->check()));
-//     \Log::info('User: ' . json_encode(auth()->user()));
+Route::get('/sanctum/csrf-cookie', [\Laravel\Sanctum\Http\Controllers\CsrfCookieController::class, 'show']);
 
-//     return response()->json([
-//         'check' => auth()->check(),
-//         'user' => auth()->user(),
-//         'session_id' => session()->getId(),
-//         'cookie' => $request->cookie(),
-//     ]);
-// });
+Route::get('auth/redirect/google', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('auth/callback/google', [GoogleAuthController::class, 'handleGoogleCallback']);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{any}', function () {
+    return view('app'); // app.blade.php
+})->where('any', '^(?!api).*$'); 

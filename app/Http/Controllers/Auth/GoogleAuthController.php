@@ -26,12 +26,11 @@ class GoogleAuthController extends Controller
             ['email' => $googleUser->getEmail()],
             [
                 'name' => $googleUser->getName(),
-                // 必要なら追加カラムもここに
+                'google_id' => $googleUser->getId(),
             ]
         );
 
         Auth::login($user, true);
-        // $request->session()->regenerate();
         session(['user_id' => $user->id]);
 
         \Log::info('Google ユーザー取得: ', [$googleUser]);
@@ -41,6 +40,6 @@ class GoogleAuthController extends Controller
         csrf_token();
 
         // SPAトップへリダイレクト
-        return redirect(env('FRONTEND_URL', 'http://localhost:8000'));
+        return redirect(env('FRONTEND_URL', 'http://localhost'));
     }
 }
