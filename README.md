@@ -1,61 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🌀 Maze Of Me API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+思考の迷路を旅して、自分自身を知る
 
-## About Laravel
+Laravel + Sanctum + Socialite を用いたバックエンド API サーバーです。
+思考・感情・気づきを「ノード」として記録・可視化する Web アプリ Maze Of Me の API を提供します。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+📖 プロジェクト概要
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+認証：Google OAuth + Laravel Sanctum（セッションベース）
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+提供機能：ユーザー認証、ノード CRUD API
 
-## Learning Laravel
+利用 DB：MySQL（Docker コンテナ）
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+⚙️ 技術スタック
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Laravel 12.x
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Sanctum（セッションベース認証）
 
-## Laravel Sponsors
+Socialite（Google OAuth）
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+MySQL 8.x
 
-### Premium Partners
+Docker / docker-compose
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+🚀 セットアップ手順
+1. リポジトリをクローン
+git clone https://github.com/kaiserino1002/maze-of-me-api.git
+cd maze-of-me-api
 
-## Contributing
+2. 環境変数を設定
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+修正が必要な主な項目:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+APP_URL=http://localhost:3000
 
-## Security Vulnerabilities
+DB_* （ユーザー名/パスワード）
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 
-## License
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/callback/google
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. Docker 起動
+docker compose up -d --build
+
+4. Laravel セットアップ
+docker exec -it api bash
+composer install
+php artisan key:generate
+php artisan migrate
+
+🔑 認証フロー
+
+Google ログイン開始
+
+GET /api/auth/redirect/google
+
+
+Google コールバック
+
+GET /api/auth/callback/google
+
+
+認証済みユーザー取得
+
+GET /api/user
+
+
+（auth:sanctum ミドルウェア）
+
+🌐 開発環境
+
+API: http://localhost:3000
+
+MySQL: localhost:3307 → 3306
+
+phpMyAdmin: http://localhost:8080
+
+🎨 デザインプロトタイプ
+
+Figma 上で UI デザインを確認できます。
+
+👉 Maze Of Me プロトタイプ (Figma)
