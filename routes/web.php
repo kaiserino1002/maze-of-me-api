@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\GoogleLoginController;
-use App\Http\Controllers\Auth\GoogleAuthController;
+use Illuminate\Support\Facades\Http;
 
-Route::get('/sanctum/csrf-cookie', [\Laravel\Sanctum\Http\Controllers\CsrfCookieController::class, 'show']);
+Route::get('/', function () {
+  return view('welcome');
+});
 
-Route::get('auth/redirect/google', [GoogleAuthController::class, 'redirectToGoogle']);
-Route::get('auth/callback/google', [GoogleAuthController::class, 'handleGoogleCallback']);
+Route::get('/test-analyzer', function () {
+  $response = Http::post(config('services.analyzer.url') . '/analyze', [
+    'text' => 'Hello from Laravel!',
+  ]);
 
-Route::get('/{any}', function () {
-    return view('app'); // app.blade.php
-})->where('any', '^(?!api).*$'); 
+  return $response->json();
+});

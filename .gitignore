@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+ssh -*
+id_ed25519*
+id_rsa*

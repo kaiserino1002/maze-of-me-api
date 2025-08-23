@@ -1,4 +1,15 @@
 services:
+    analyzer:
+        build:
+            context: ../maze-of-me-analyzer
+        container_name: maze-of-me-analyzer
+        command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+        ports:
+            - "8001:8001"
+        volumes:
+            - ../maze-of-me-analyzer:/app
+        networks:
+            - sail
     laravel.test:
         build:
             context: ./vendor/laravel/sail/runtimes/8.4
