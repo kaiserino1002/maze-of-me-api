@@ -14,22 +14,37 @@ class GoogleAuthController extends Controller
   {
     if (config('app.auth_disabled')) {
       // Preview 環境 → 認証スキップ
-      Log::info('認証スキップモード: redirectToGoogle は無効');
-      return redirect('/'); // フロントに戻すだけ
+      Log::info('認証スキップ: redirectToGoogle');
+      return redirect(env('FRONTEND_URL', 'http://localhost:5173'));
     }
 
     Log::info('Redirect URI: ' . config('services.google.redirect'));
     return Socialite::driver('google')->stateless()->redirect();
   }
 
+  // Googleからのコールバック
   public function handleGoogleCallback()
   {
     if (config('app.auth_disabled')) {
-      // Preview 環境 → 認証スキップ
-      Log::info('認証スキップモード: handleGoogleCallback は無効');
-      return redirect('/');
+      // Preview 環境 → ダミーユーザー作成
+      Log::info('認証スキップ: handleGoogleCallback');
+
+      $user = User::firstOrCreate(
+        ['email' => 'preview@maze-of-me.test'],
+        [
+          'name' => 'Preview User',
+          'google_id' => 'preview',
+        ]
+      );
+
+      Auth::login($user, true);
+      session(['user_id' => $user->id]);
+      request()->session()->regenerate();
+
+      return redirect(env('FRONTEND_URL', 'http://localhost:5173'));
     }
 
+    // 本番・ローカル環境 → Google OAuth
     $googleUser = Socialite::driver('google')->stateless()->user();
 
     $user = User::firstOrCreate(
@@ -42,6 +57,7 @@ class GoogleAuthController extends Controller
 
     Auth::login($user, true);
     session(['user_id' => $user->id]);
+    request()->session()->regenerate();
 
     Log::info('Google ユーザー取得: ', [$googleUser]);
     Log::info('ログイン後のユーザー: ', [Auth::user()]);
