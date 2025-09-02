@@ -32,3 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/node', [NodeController::class, 'store']);
   Route::post('/analyze', [AnalysisController::class, 'analyze']);
 });
+
+Route::get('auth/redirect/google', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('auth/callback/google', [GoogleAuthController::class, 'handleGoogleCallback']);
