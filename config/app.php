@@ -211,4 +211,12 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auth Disabled
+    |--------------------------------------------------------------------------
+    */
+
+    'auth_disabled' => env('AUTH_DISABLED', false),
 ];
